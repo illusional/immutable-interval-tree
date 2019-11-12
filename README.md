@@ -1,4 +1,4 @@
-# Immutable Interval Tree
+# Immutable Interval Tree (Pre-alpha)
 
 Similar to [davidisaaclee/interval-tree](https://github.com/davidisaaclee/interval-tree), I wanted an type-safe interval tree with immutable functional interface. 
 
@@ -10,8 +10,9 @@ The primary motivations for this project was to be:
 
 ## Install
 
-```
-npm install immutable-interval-tree
+```bash
+# proposed
+# npm install immutable-interval-tree
 ```
 
 
