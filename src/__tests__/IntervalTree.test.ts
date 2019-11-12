@@ -1,4 +1,11 @@
-import { IntervalTree } from '../index';
+import { IntervalTree, IIntervalNode } from '../index';
+
+const triTree = [
+  { identifier: "1st", low: 1, high: 2 },
+  { identifier: "3rd", low: 3, high: 4 },
+  { identifier: "2nd", low: 0, high: 1 },
+].reduce((tr, int) => IntervalTree.insert_node(tr, int), IntervalTree.empty())
+
 test('empty', () => {
   let tree = IntervalTree.empty()
   expect(Object.keys(tree.children).length).toBe(0);
@@ -34,6 +41,85 @@ test('add-remove-root', () => {
   expect(Object.keys(tree.index).length).toBe(0);
   expect(tree.root).toBe(null);
 });
+
+test('add-two-children', () => {
+  expect(triTree.root).toBe("1st")
+  expect(triTree.children["1st"].left).toBe("2nd")
+  expect(triTree.children["1st"].right).toBe("3rd")
+  // expect(triTree.children["1st"].height).toBe(2)
+  expect(triTree.children["2nd"].left).toBeNull()
+  expect(triTree.children["2nd"].right).toBeNull()
+  expect(triTree.children["3rd"].left).toBeNull()
+  expect(triTree.children["3rd"].right).toBeNull()
+
+  const inorder = IntervalTree.inorder(triTree)
+  expect(inorder).toHaveLength(3)
+  expect(inorder).toEqual([
+    { low: 0, high: 1 },
+    { low: 1, high: 2 },
+    { low: 3, high: 4 }
+  ])
+})
+
+test('remove-left-empty-child', () => {
+  const tree = IntervalTree.remove(triTree, "2nd")
+  expect(tree.index["2nd"]).toBeUndefined()
+  expect(tree.children["1st"].left).toBeNull()
+})
+
+test('remove-right-empty-child', () => {
+  const tree = IntervalTree.remove(triTree, "3rd")
+  expect(tree.index["3rd"]).toBeUndefined()
+  expect(tree.children["1st"].right).toBeNull()
+})
+
+test('remove-left-one-descendent', () => {
+  var tree = [
+    // notice reordered tree array
+    { identifier: "1st", low: 3, high: 4 },
+    { identifier: "2nd", low: 1, high: 2 },
+    { identifier: "3rd", low: 0, high: 1 },
+  ].reduce((tr, int) => IntervalTree.insert_node(tr, int), IntervalTree.empty())
+
+  expect(tree.children["1st"].left).toBe("2nd")
+  expect(tree.children["2nd"].left).toBe("3rd")
+
+  const shortTree = IntervalTree.remove(tree, "2nd")
+
+  expect(shortTree.index["2nd"]).toBeUndefined()
+  expect(shortTree.children["1st"].left).toBe("3rd")
+})
+
+test('remove-right-one-descendent', () => {
+  var tree = [
+    // notice reordered tree array
+    { identifier: "1st", low: 0, high: 1 },
+    { identifier: "2nd", low: 1, high: 2 },
+    { identifier: "3rd", low: 3, high: 4 },
+  ].reduce((tr, int) => IntervalTree.insert_node(tr, int), IntervalTree.empty())
+
+  expect(tree.children["1st"].right).toBe("2nd")
+  expect(tree.children["2nd"].right).toBe("3rd")
+
+  const shortTree = IntervalTree.remove(tree, "2nd")
+
+  expect(shortTree.index["2nd"]).toBeUndefined()
+  expect(shortTree.children["1st"].right).toBe("3rd")
+})
+
+test('remove-root-two-children', () => {
+  let tree = [
+    { identifier: "1st", low: 1, high: 2 },
+    { identifier: "3rd", low: 3, high: 4 },
+    { identifier: "2nd", low: 0, high: 1 },
+  ].reduce((tr, int) => IntervalTree.insert_node(tr, int), IntervalTree.empty())
+  tree = IntervalTree.remove(tree, "1st")
+  expect(tree.index["1st"]).toBeUndefined()
+  expect(tree.children["1st"]).toBeUndefined()
+  expect(tree.root).toBe("3rd")
+
+  expect(tree.children["3rd"].left).toBe("2nd")
+})
 
 
   // private static test() {
