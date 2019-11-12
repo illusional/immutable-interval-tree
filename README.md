@@ -2,6 +2,12 @@
 
 > This repository is still in development. Intervals can be inserted and queried, but there is still work to be done to remove nodes.
 
+Changes to be made:
+
+- Fix deletion
+- Height should be 0 if no children, thinking depth
+- Pass test(ish) cases from https://www.hackerrank.com/challenges/self-balancing-tree/forum
+
 Similar to [davidisaaclee/interval-tree](https://github.com/davidisaaclee/interval-tree), I wanted an type-safe interval tree with immutable functional interface. 
 
 The primary motivations for this project was to be:
