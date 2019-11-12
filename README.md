@@ -1,5 +1,7 @@
 # Immutable Interval Tree (Pre-alpha)
 
+> This repository is still in development. Intervals can be inserted and queried, but there is still work to be done to remove nodes.
+
 Similar to [davidisaaclee/interval-tree](https://github.com/davidisaaclee/interval-tree), I wanted an type-safe interval tree with immutable functional interface. 
 
 The primary motivations for this project was to be:
@@ -60,3 +62,9 @@ export interface IIntervalTree {
     children: { [identifier: string]: IPotentialChildren };
 }
 ```
+
+## Other notes
+
+- Based on the [Geeks for Geek guide](https://www.geeksforgeeks.org/interval-tree/).
+- The repository was setup using: [Step by step: Building and publishing an NPM Typescript package.](https://itnext.io/step-by-step-building-and-publishing-an-npm-typescript-package-44fe7164964c)
+
