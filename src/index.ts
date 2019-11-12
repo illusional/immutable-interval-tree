@@ -244,8 +244,10 @@ export class IntervalTree {
             if (parent) {
                 tree.children[parent][direction as string] = successor;
             }
-            children[successor] = {
+            tree.children[successor] = {
                 ...children,
+                left: children.left !== successor ? children.left : null,
+                right: children.right !== successor ? children.right : null
             };
         } else {
             // one child
