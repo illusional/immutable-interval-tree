@@ -31,6 +31,10 @@ export class IntervalTree {
         return { index: {}, root: null, children: {} };
     }
 
+    public static get(tree: IIntervalTree, identifier: string): IIntervalNode | null {
+        return tree.index[identifier]
+    }
+
     public static hasOverlap(tree: IIntervalTree, interval: IInterval, inclusive: boolean = false): boolean {
         return !!this.overlappingInterval(tree, interval, inclusive);
     }
@@ -48,22 +52,32 @@ export class IntervalTree {
     }
 
     public static insert(tree: IIntervalTree, identifier: string, low: number, high: number, data?: any): IIntervalTree {
-        const newNode: IIntervalNode = { identifier, low, high, data };
+        const node: IIntervalNode = { identifier, low, high, data };
+        return this.insert_node(tree, node)
+    }
+
+    public static insert_node(tree: IIntervalTree, node: IIntervalNode): IIntervalTree {
+
+        // sanity check
+        if (node.identifier in tree.index || node.identifier in tree.children) {
+            throw new Error(`Node with identifier "${node.identifier}" already found in tree`)
+        }
+
         const newIT = IntervalTree.copy(tree);
 
-        newIT.index[newNode.identifier] = newNode;
-        newIT.children[newNode.identifier] = { high: newNode.high, low: newNode.low, left: null, right: null, height: 0 };
+        newIT.index[node.identifier] = node;
+        newIT.children[node.identifier] = { high: node.high, low: node.low, left: null, right: null, height: 0 };
 
         const root = newIT.root;
         if (root) {
-            IntervalTree.recursiveSet(newIT, root, newNode);
+            IntervalTree.recursiveSet(newIT, root, node);
         } else {
             // First node, so set root
-            newIT.root = newNode.identifier;
-            newIT.children[newNode.identifier].high = newNode.high;
-            newIT.children[newNode.identifier].low = newNode.low;
+            newIT.root = node.identifier;
+            newIT.children[node.identifier].high = node.high;
+            newIT.children[node.identifier].low = node.low;
         }
-        this.mutate_calculateHeight(newIT, newNode.identifier)
+        this.mutate_calculateHeight(newIT, node.identifier)
 
         return newIT;
     }
