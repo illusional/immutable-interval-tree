@@ -5,7 +5,7 @@ export interface IInterval {
     high: number;
 }
 
-interface IIntervalNode extends IInterval {
+export interface IIntervalNode extends IInterval {
     identifier: string;
     data?: any;
 }
@@ -204,14 +204,14 @@ export class IntervalTree {
         if (removeIdentifier !== currentIdentifier) {
             const interval = tree.index[removeIdentifier];
 
-            let removed: string | null = null;
+            let replacement: string | null = null;
             if (children.left && IntervalTree.isOverlap(tree.children[children.left], interval)) {
-                removed = this.recursiveDeleteNoRotate(tree, removeIdentifier, children.left, currentIdentifier, 'left');
+                replacement = this.recursiveDeleteNoRotate(tree, removeIdentifier, children.left, currentIdentifier, 'left');
             }
-            if (!removed && children.right && IntervalTree.isOverlap(tree.children[children.right], interval)) {
-                removed = this.recursiveDeleteNoRotate(tree, removeIdentifier, children.right, currentIdentifier, 'right');
+            if (!replacement && children.right && IntervalTree.isOverlap(tree.children[children.right], interval)) {
+                replacement = this.recursiveDeleteNoRotate(tree, removeIdentifier, children.right, currentIdentifier, 'right');
             }
-            return removed;
+            return replacement;
         }
 
         // we can easy shortcut to the correct node
@@ -225,8 +225,7 @@ export class IntervalTree {
         if (!children.left && !children.right) {
             // no children, just delete from parent and delete
             if (parent) {
-                const pchilds = tree.children[parent];
-                delete tree.children[parent][direction as string];
+                tree.children[parent][direction as string] = null
             }
             successor = null;
         } else if (!!children.left && !!children.right) {
@@ -252,10 +251,10 @@ export class IntervalTree {
             // one child
             successor = children.left || children.right;
             if (parent) {
-                children[parent] = successor;
+                tree.children[parent][direction as string] = successor;
             }
         }
-        return null;
+        return successor;
     }
 
     private static balance(tree: IIntervalTree, identifier?: string | null) {
