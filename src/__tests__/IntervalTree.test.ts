@@ -121,6 +121,25 @@ test('remove-root-two-children', () => {
   expect(tree.children["3rd"].left).toBe("2nd")
 })
 
+test('remove-nested-two-down', () => {
+  let tree = [
+    { identifier: "t", low: 1, high: 2 },
+    { identifier: "r", low: 3, high: 4 },
+    { identifier: "rl", low: 2, high: 2.5 },
+    { identifier: "rr", low: 5, high: 6 },
+    { identifier: "rll", low: 2.1, high: 2.2 },
+    { identifier: "rlr", low: 2.5, high: 3 },
+    { identifier: "rrl", low: 4, high: 4.5 }
+  ].reduce((tr, int) => IntervalTree.insert_node(tr, int), IntervalTree.empty())
+
+  tree = IntervalTree.remove(tree, "r")
+  expect(tree.index["r"]).toBeUndefined()
+  expect(tree.children["r"]).toBeUndefined()
+  expect(tree.children["t"].right).toEqual("rrl")
+
+
+})
+
 
   // private static test() {
   //     const ints = [

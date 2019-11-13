@@ -236,7 +236,7 @@ export class IntervalTree {
                 this.recursiveDeleteNoRotate(tree, successor, children.left, removeIdentifier, 'left');
             }
             if (children.right && children.right !== successor) {
-                this.recursiveDeleteNoRotate(tree, successor, children.left, removeIdentifier, 'right');
+                this.recursiveDeleteNoRotate(tree, successor, children.right, removeIdentifier, 'right');
             }
 
             // now that the successor has been deleted from the subgraph, we can overwrite
